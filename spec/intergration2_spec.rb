@@ -37,20 +37,37 @@ RSpec.describe "integration" do
       todo_entry = TodoEntry.new("take out trash")
       todo_entry2 = TodoEntry.new("clean car")
       todo_list.add(todo_entry.mark_done!)
-      todo_list.add(todo_entry2.mark_done!)
-      expect(todo_list.complete).to eq ["take out trash - done!", "clean car - done!"]
+      todo_list.add(todo_entry2.mark_incomplete)
+      expect(todo_list.complete).to eq ["take out trash - done!"]
     end
 
     it "returns incomplete todos" do
       todo_list = TodoList.new
       todo_entry = TodoEntry.new("take out trash")
       todo_entry2 = TodoEntry.new("clean car")
-      todo_list.add(todo_entry)
-      todo_list.add(todo_entry2)
-      expect(todo_list.incomplete).to eq [todo_entry, todo_entry2]
+      todo_list.add(todo_entry.mark_done!)
+      todo_list.add(todo_entry2.mark_incomplete)
+      expect(todo_list.incomplete).to eq ["clean car - incomplete"]
+    end
+
+    it "returns nothing in incomplete todos when all are done" do
+      todo_list = TodoList.new
+      todo_entry = TodoEntry.new("take out trash")
+      todo_entry2 = TodoEntry.new("clean car")
+      todo_list.add(todo_entry.mark_done!)
+      todo_list.add(todo_entry2.mark_done!)
+      expect(todo_list.incomplete).to eq []
+    end
+
+    context "#give up" do
+      it "marks all todos as done - complete returns all - incomplete returns nil" do
+      todo_list = TodoList.new
+      todo_entry = TodoEntry.new("take out trash")
+      todo_entry2 = TodoEntry.new("clean car")
+      todo_list.add(todo_entry.mark_incomplete)
+      todo_list.add(todo_entry2.mark_incomplete)
+      expect(todo_list.give_up!).to eq ["take out trash - done!", "clean car - done!"]
     end
   end
 end
-
-#need a test that tests whether a marked done todo does return 
-#via incomplete method
+end

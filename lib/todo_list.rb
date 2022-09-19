@@ -1,5 +1,3 @@
-#main file which prints tasks (incomplete and complete) to user
-
 class TodoList
   def initialize
     @todo_list = []
@@ -7,29 +5,21 @@ class TodoList
 
   def add(todo) 
     @todo_list << todo
-
-    # todo is an instance of TodoEntry
-    # returns nothing
   end
 
   def all
     return @todo_list
   end
 
-  def incomplete # Returns all non-done todos
-    #need to search through todo_list and identify and return any
-    #that do not include the words done
-    @todo_list
-
+  def incomplete 
+    return @todo_list.select { |todo| todo.match(/incomplete/) }
   end
 
-  def complete  # Returns all complete todos
-    @todo_list.each { |todo| todo.include?("done") == true ? todo : false }
+  def complete
+    return @todo_list.select { |todo| todo.match(/done/) }
   end
 
   def give_up!
-    # Marks all todos as complete
-    @todo_list.map do |todo| todo.concat("done")
-    end
+    @todo_list.select { |todo| todo.gsub!(/\bincomplete\b/, "done!") }
   end
 end
